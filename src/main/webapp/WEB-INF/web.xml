@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+    <!-- [START Objectify] -->
+    <filter>
+        <filter-name>ObjectifyFilter</filter-name>
+        <filter-class>com.googlecode.objectify.ObjectifyFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>ObjectifyFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <listener>
+        <listener-class>com.dalendev.meteotndata.general.ObjectifyHelper</listener-class>
+    </listener>
+    <!-- [END Objectify] -->
+    
+    <!-- [START Endpoints] -->
+    <servlet>
+        <servlet-name>SystemServiceServlet</servlet-name>
+        <servlet-class>com.google.api.server.spi.SystemServiceServlet</servlet-class>
+        <init-param>
+            <param-name>services</param-name>
+            <param-value>
+                com.dalendev.meteotndata.api.StationApi
+                com.dalendev.meteotndata.api.MeasurementApi
+            </param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SystemServiceServlet</servlet-name>
+        <url-pattern>/_ah/spi/*</url-pattern>
+    </servlet-mapping>
+    <!-- END Endpoints] -->
+    
+    <servlet>
+        <servlet-name>ImportStationServlet</servlet-name>
+        <servlet-class>com.dalendev.meteotndata.servlet.ImportStationServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>EnqueueStationTaskServlet</servlet-name>
+        <servlet-class>com.dalendev.meteotndata.servlet.EnqueueStationTaskServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateStationDataServlet</servlet-name>
+        <servlet-class>com.dalendev.meteotndata.servlet.UpdateStationDataServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ImportStationServlet</servlet-name>
+        <url-pattern>/crons/importStation</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EnqueueStationTaskServlet</servlet-name>
+        <url-pattern>/crons/enqueuStations</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateStationDataServlet</servlet-name>
+        <url-pattern>/tasks/updateStationData</url-pattern>
+    </servlet-mapping>
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>tasks</web-resource-name>
+            <url-pattern>/tasks/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>admin</role-name>
+        </auth-constraint>
+    </security-constraint>
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>crons</web-resource-name>
+            <url-pattern>/crons/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>admin</role-name>
+        </auth-constraint>
+    </security-constraint>
+</web-app>
