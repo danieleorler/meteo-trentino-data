@@ -1,4 +1,4 @@
-appengine-skeleton
+meteo-trentino-data
 =============================
 
-This is a generated application from the appengine-skeleton archetype.
+This is a java web app running on GAE which periodically fetches, samples and stores weather data from meteo trentino's open data.
