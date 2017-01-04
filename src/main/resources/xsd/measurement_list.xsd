@@ -30,7 +30,19 @@ THE SOFTWARE.
            xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
            attributeFormDefault="unqualified"
            elementFormDefault="qualified"
-           jaxb:version="2.0">
+           jaxb:version="2.1">
+    
+    <xs:annotation>
+        <xs:appinfo>
+            <jaxb:globalBindings>
+                <jaxb:javaType
+                        name="org.joda.time.LocalDateTime"
+                        xmlType="xs:dateTime"
+                        parseMethod="com.dalendev.meteotndata.general.LocalDateTimeAdapter.unmarshal"
+                        printMethod="com.dalendev.meteotndata.general.LocalDateTimeAdapter.marshal" />
+            </jaxb:globalBindings> 
+        </xs:appinfo>
+    </xs:annotation>
 
     <xs:element name="datiOggi" type="measurementListType" />
     
@@ -96,7 +108,7 @@ THE SOFTWARE.
             </xs:appinfo>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="data" type="xs:date" minOccurs="1" maxOccurs="1">
+            <xs:element name="data" type="xs:dateTime" minOccurs="1" maxOccurs="1">
                 <xs:annotation>
                     <xs:appinfo>
                         <jaxb:property name="date"/>
@@ -138,7 +150,7 @@ THE SOFTWARE.
             </xs:appinfo>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="data" type="xs:date" minOccurs="1" maxOccurs="1">
+            <xs:element name="data" type="xs:dateTime" minOccurs="1" maxOccurs="1">
                 <xs:annotation>
                     <xs:appinfo>
                         <jaxb:property name="date"/>
@@ -179,7 +191,7 @@ THE SOFTWARE.
             </xs:appinfo>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="data" type="xs:date" minOccurs="1" maxOccurs="1">
+            <xs:element name="data" type="xs:dateTime" minOccurs="1" maxOccurs="1">
                 <xs:annotation>
                     <xs:appinfo>
                         <jaxb:property name="date"/>
@@ -228,7 +240,7 @@ THE SOFTWARE.
             </xs:appinfo>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="data" type="xs:date" minOccurs="1" maxOccurs="1">
+            <xs:element name="data" type="xs:dateTime" minOccurs="1" maxOccurs="1">
                 <xs:annotation>
                     <xs:appinfo>
                         <jaxb:property name="date"/>

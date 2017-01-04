@@ -75,7 +75,7 @@ public class MeasurmentSamplerService
     {
         for(Temperature t : measurementList.getTemperatureList().getContent())
         {
-            Long timestamp = getTimeInMilliSeconds(t.getDate());
+            Long timestamp = TimeService.getMillis(t.getDate());
             if(timestamp > station.getLastUpdate())
             {
                 this.createMeasurementIfNotExists(station.getCode(), timestamp);
@@ -85,7 +85,7 @@ public class MeasurmentSamplerService
 
         for(Precipitation p : measurementList.getPrecipitationList().getContent())
         {
-            Long timestamp = p.getDate().toGregorianCalendar().getTimeInMillis();
+            Long timestamp = TimeService.getMillis(p.getDate());
             if(timestamp > station.getLastUpdate())
             {
                 this.createMeasurementIfNotExists(station.getCode(), timestamp);
@@ -95,7 +95,7 @@ public class MeasurmentSamplerService
 
         for(Wind w : measurementList.getWindList().getContent())
         {
-            Long timestamp = getTimeInMilliSeconds(w.getDate());
+            Long timestamp = TimeService.getMillis(w.getDate());
             if(timestamp > station.getLastUpdate())
             {
                 this.createMeasurementIfNotExists(station.getCode(), timestamp);
@@ -106,7 +106,7 @@ public class MeasurmentSamplerService
 
         for(Radiation r : measurementList.getRadiationList().getContent())
         {
-            Long timestamp = getTimeInMilliSeconds(r.getDate());
+            Long timestamp = TimeService.getMillis(r.getDate());
             if(timestamp > station.getLastUpdate())
             {
                 this.createMeasurementIfNotExists(station.getCode(), timestamp);
@@ -159,12 +159,6 @@ public class MeasurmentSamplerService
     private float getRain(Measurement m)
     {
         return m.getRain() >= 0 ? m.getRain() : 0;
-    }
-    
-    private Long getTimeInMilliSeconds(final XMLGregorianCalendar date) {
-        GregorianCalendar gregorianCalendar = date.toGregorianCalendar();
-        gregorianCalendar.setTimeZone(TimeZone.getTimeZone("Europe/Rome"));
-        return gregorianCalendar.getTimeInMillis();
     }
     
 }

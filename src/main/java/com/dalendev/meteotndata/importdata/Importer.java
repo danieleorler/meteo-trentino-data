@@ -31,6 +31,7 @@ import com.dalendev.meteotndata.generated.Temperature;
 import com.dalendev.meteotndata.generated.WeatherStation;
 import com.dalendev.meteotndata.generated.WeatherStationList;
 import com.dalendev.meteotndata.generated.Wind;
+import com.dalendev.meteotndata.service.TimeService;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -120,7 +121,7 @@ public class Importer
 
         for(Temperature t : o2.getTemperatureList().getContent())
         {
-            Long timestamp = t.getDate().toGregorianCalendar().getTimeInMillis();
+            Long timestamp = TimeService.getMillis(t.getDate());
             if(!merged.containsKey(timestamp))
             {
                 Measurement m = new Measurement();
@@ -133,7 +134,7 @@ public class Importer
 
         for(Precipitation p : o2.getPrecipitationList().getContent())
         {
-            Long timestamp = p.getDate().toGregorianCalendar().getTimeInMillis();
+            Long timestamp = TimeService.getMillis(p.getDate());
             if(!merged.containsKey(timestamp))
             {
                 Measurement m = new Measurement();
@@ -146,7 +147,7 @@ public class Importer
 
         for(Wind w : o2.getWindList().getContent())
         {
-            Long timestamp = w.getDate().toGregorianCalendar().getTimeInMillis();
+            Long timestamp = TimeService.getMillis(w.getDate());
             if(!merged.containsKey(timestamp))
             {
                 Measurement m = new Measurement();
@@ -160,7 +161,7 @@ public class Importer
 
         for(Radiation r : o2.getRadiationList().getContent())
         {
-            Long timestamp = r.getDate().toGregorianCalendar().getTimeInMillis();
+            Long timestamp = TimeService.getMillis(r.getDate());
             if(!merged.containsKey(timestamp))
             {
                 Measurement m = new Measurement();
