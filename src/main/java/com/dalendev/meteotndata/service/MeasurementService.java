@@ -23,7 +23,8 @@
  */
 package com.dalendev.meteotndata.service;
 
-import com.dalendev.meteotndata.dao.MeasurementDAO;
+import com.dalendev.meteotndata.dao.MeasurementDaoInterface;
+import com.dalendev.meteotndata.dao.MeasurementDataStoreDao;
 import com.dalendev.meteotndata.domain.Measurement;
 import java.util.Date;
 import java.util.List;
@@ -37,6 +38,12 @@ public class MeasurementService
     final static long _30DAYS_IN_S = 30 * 24 * 60 * 60;
     final static long _7DAYS_IN_S = 7 * 24 * 60 * 60;
     
+    private MeasurementDaoInterface measurementDao;
+
+    public MeasurementService(MeasurementDaoInterface measurementDao) {
+        this.measurementDao = measurementDao;
+    }
+
     public List<Measurement> getMeasurements(String station, Long from, Long to)
     {
         if(to == null)
@@ -61,6 +68,6 @@ public class MeasurementService
         {
             throw new IllegalArgumentException("Date range too wide (max 30 days)");
         }
-        return MeasurementDAO.getMeasurements(station, from, to);
+        return measurementDao.getMeasurements(station, from, to);
     }
 }

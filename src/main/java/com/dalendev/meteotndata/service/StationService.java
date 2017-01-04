@@ -23,7 +23,8 @@
  */
 package com.dalendev.meteotndata.service;
 
-import com.dalendev.meteotndata.dao.StationDAO;
+import com.dalendev.meteotndata.dao.StationDataStoreDao;
+import com.dalendev.meteotndata.dao.StationDaoInterface;
 import com.dalendev.meteotndata.domain.Station;
 import java.util.List;
 
@@ -33,15 +34,20 @@ import java.util.List;
  */
 public class StationService
 {
+    private StationDaoInterface stationDao;
+
+    public StationService(StationDaoInterface stationDao) {
+        this.stationDao = stationDao;
+    }
     
     public Station getStationByCode(String code)
     {
-        return StationDAO.getStationByCode(code);
+        return stationDao.getStationByCode(code);
     }
     
     public List<Station> getStations()
     {
-        return StationDAO.getStations();
+        return stationDao.getStations();
     }
     
 }

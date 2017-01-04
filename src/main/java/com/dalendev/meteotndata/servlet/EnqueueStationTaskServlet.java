@@ -23,7 +23,8 @@
  */
 package com.dalendev.meteotndata.servlet;
 
-import com.dalendev.meteotndata.dao.StationDAO;
+import com.dalendev.meteotndata.dao.StationDaoInterface;
+import com.dalendev.meteotndata.dao.StationDataStoreDao;
 import com.dalendev.meteotndata.domain.Station;
 import com.dalendev.meteotndata.importdata.TaskEnqueuer;
 import java.io.IOException;
@@ -52,7 +53,8 @@ public class EnqueueStationTaskServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
     {
-        List<Station> stations = StationDAO.getStations();
+        StationDaoInterface stationDao = new StationDataStoreDao();
+        List<Station> stations = stationDao.getStations();
         TaskEnqueuer.enqueueAllStations(stations);
         response.setStatus(200);
     }

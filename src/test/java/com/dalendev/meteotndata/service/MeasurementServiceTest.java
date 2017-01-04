@@ -23,6 +23,7 @@
  */
 package com.dalendev.meteotndata.service;
 
+import com.dalendev.meteotndata.dao.MeasurementDataStoreDao;
 import com.dalendev.meteotndata.domain.Measurement;
 import java.util.List;
 import org.junit.After;
@@ -69,7 +70,7 @@ public class MeasurementServiceTest {
     @Test
     public void testGetMeasurementsInconsistentDateRange() {
         System.out.println("getMeasurements");
-        MeasurementService instance = new MeasurementService();
+        MeasurementService instance = new MeasurementService(new MeasurementDataStoreDao());
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Date range inconsistent");
         instance.getMeasurements("T0420", 1454781600000L, 1454778000000L);
@@ -82,7 +83,7 @@ public class MeasurementServiceTest {
     @Test
     public void testGetMeasurementsDateRangeTooWide() {
         System.out.println("getMeasurements");
-        MeasurementService instance = new MeasurementService();
+        MeasurementService instance = new MeasurementService(new MeasurementDataStoreDao());
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Date range too wide (max 30 days)");
         instance.getMeasurements("T0420", 0L, 1454778000000L);
@@ -95,7 +96,7 @@ public class MeasurementServiceTest {
     @Test
     public void testGetMeasurementsStationCodeInvalid() {
         System.out.println("getMeasurements");
-        MeasurementService instance = new MeasurementService();
+        MeasurementService instance = new MeasurementService(new MeasurementDataStoreDao());
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Station code invalid");
         instance.getMeasurements("T020", 0L, 1454778000000L);
@@ -108,7 +109,7 @@ public class MeasurementServiceTest {
     @Test
     public void testGetMeasurementsStationCodeInvalidNull() {
         System.out.println("getMeasurements");
-        MeasurementService instance = new MeasurementService();
+        MeasurementService instance = new MeasurementService(new MeasurementDataStoreDao());
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Station code invalid");
         instance.getMeasurements(null, 0L, 1454778000000L);

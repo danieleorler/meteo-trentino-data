@@ -23,6 +23,7 @@
  */
 package com.dalendev.meteotndata.api;
 
+import com.dalendev.meteotndata.dao.StationDataStoreDao;
 import com.dalendev.meteotndata.domain.Station;
 import com.dalendev.meteotndata.service.StationService;
 import com.google.api.server.spi.config.Api;
@@ -40,6 +41,12 @@ import java.util.List;
 @ApiClass(resource = "station")
 public class StationApi
 {
+    private StationService stationService;
+
+    public StationApi() {
+        stationService = new StationService(new StationDataStoreDao());
+    }
+    
     @ApiMethod
     (
         name = "station.list",
@@ -48,8 +55,7 @@ public class StationApi
     )
     public List<Station> getStations()
     {
-        StationService s = new StationService();
-        return s.getStations();
+        return stationService.getStations();
     }
     
     
@@ -61,9 +67,7 @@ public class StationApi
     )
     public Station getStationByCode(@Named("stationCode") String code)
     {
-        StationService s = new StationService();
-        return s.getStationByCode(code);
+        return stationService.getStationByCode(code);
     }
-    
     
 }

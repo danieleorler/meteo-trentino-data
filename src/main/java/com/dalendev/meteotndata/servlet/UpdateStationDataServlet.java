@@ -23,8 +23,10 @@
  */
 package com.dalendev.meteotndata.servlet;
 
-import com.dalendev.meteotndata.dao.MeasurementDAO;
-import com.dalendev.meteotndata.dao.StationDAO;
+import com.dalendev.meteotndata.dao.MeasurementDaoInterface;
+import com.dalendev.meteotndata.dao.MeasurementDataStoreDao;
+import com.dalendev.meteotndata.dao.StationDaoInterface;
+import com.dalendev.meteotndata.dao.StationDataStoreDao;
 import com.dalendev.meteotndata.domain.Measurement;
 import com.dalendev.meteotndata.domain.Station;
 import com.dalendev.meteotndata.generated.MeasurementList;
@@ -93,13 +95,15 @@ public class UpdateStationDataServlet extends HttpServlet {
                 MeasurmentSamplerService mss = new MeasurmentSamplerService();
                 mss.mergeMeasurment(station, measurementList);
                 List<Measurement> sampledList = mss.getSampledMeasurementList();
-                MeasurementDAO.storeStation(sampledList);
+                MeasurementDaoInterface measurementDao = new MeasurementDataStoreDao();
+                measurementDao.storeStation(sampledList);
+                StationDaoInterface stationDao = new StationDataStoreDao();
                 
                 if(sampledList.size() > 0)
                 {
                     Measurement lastMeasurement = sampledList.get(sampledList.size()-1);
                     station.setLastUpdate(lastMeasurement.getTimestamp());
-                    StationDAO.storeStation(station);
+                    stationDao.storeStation(station);
                 }
                 
                 Logger.getLogger(UpdateStationDataServlet.class.getName()).log(Level.INFO, "Station {0} has {1} new measurements", new Object[]{station.getCode(), sampledList.size()});

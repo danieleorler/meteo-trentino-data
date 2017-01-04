@@ -31,13 +31,13 @@ import java.util.List;
  *
  * @author danieleorler
  */
-public class StationDAO
+public class StationDataStoreDao implements StationDaoInterface
 {
     /**
      * Retrieves all the Stations from the datastore
      * @return a list of Stations
      */
-    public static List<Station> getStations()
+    public List<Station> getStations()
     {
         return ObjectifyService.ofy().load().type(Station.class).list();
     }
@@ -47,7 +47,7 @@ public class StationDAO
      * @param code
      * @return Station, null if no Station was found for the given code
      */
-    public static Station getStationByCode(String code)
+    public Station getStationByCode(String code)
     {
         return ObjectifyService.ofy().load().type(Station.class).filter("code", code).first().now();
     }
@@ -56,11 +56,11 @@ public class StationDAO
      * Stores a list of Stations into the datastore
      * @param stations list of Stations to store
      */
-    public static void storeStation(List<Station> stations)
+    public void storeStation(List<Station> stations)
     {
         for(Station station : stations)
         {
-            StationDAO.storeStation(station);
+            this.storeStation(station);
         }
     }
     
@@ -70,7 +70,7 @@ public class StationDAO
      * If the station doesn't have an Id this method will look up its code, if it cannot find it the stores the Station
      * @param station 
      */
-    public static void storeStation(Station station)
+    public void storeStation(Station station)
     {
         if(station.getId() != null)
         {
@@ -78,7 +78,7 @@ public class StationDAO
         }
         else
         {
-            if(StationDAO.getStationByCode(station.getCode()) == null)
+            if(this.getStationByCode(station.getCode()) == null)
             {
                 ObjectifyService.ofy().save().entity(station).now();
             }

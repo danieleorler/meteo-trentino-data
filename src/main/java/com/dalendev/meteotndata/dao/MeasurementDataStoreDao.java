@@ -32,10 +32,10 @@ import java.util.List;
  *
  * @author danieleorler
  */
-public class MeasurementDAO
+public class MeasurementDataStoreDao implements MeasurementDaoInterface
 {
 
-    public static void storeMeasurement(Measurement measurement)
+    public void storeMeasurement(Measurement measurement)
     {
         ObjectifyService.ofy().save().entity(measurement).now();
     }
@@ -44,17 +44,17 @@ public class MeasurementDAO
      * Stores a list of measurements into the datastore
      * @param measurements list of Measurement to store
      */
-    public static void storeStation(List<Measurement> measurements)
+    public void storeStation(List<Measurement> measurements)
     {
         for(Measurement measurement : measurements)
         {
-            MeasurementDAO.storeMeasurement(measurement);
+            this.storeMeasurement(measurement);
         }
     }
     
-    public static List<Measurement> getMeasurements(String station, Long from, Long to)
+    public List<Measurement> getMeasurements(String station, Long from, Long to)
     {
-        // Query onbjects are immutable
+        // Query objects are immutable
         Query<Measurement> q = ObjectifyService.ofy().load().type(Measurement.class);
         q = q.filter("stationCode",station);
         q = q.filter("timestamp >=",from);

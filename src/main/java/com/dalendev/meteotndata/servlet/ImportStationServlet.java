@@ -23,7 +23,8 @@
  */
 package com.dalendev.meteotndata.servlet;
 
-import com.dalendev.meteotndata.dao.StationDAO;
+import com.dalendev.meteotndata.dao.StationDaoInterface;
+import com.dalendev.meteotndata.dao.StationDataStoreDao;
 import com.dalendev.meteotndata.domain.Station;
 import com.dalendev.meteotndata.generated.WeatherStation;
 import com.dalendev.meteotndata.generated.WeatherStationList;
@@ -70,10 +71,12 @@ public class ImportStationServlet extends HttpServlet
             JAXBElement je = u.unmarshal(src,WeatherStationList.class);
 
             WeatherStationList o = (WeatherStationList) je.getValue();
+            
+            StationDaoInterface stationDao = new StationDataStoreDao();
         
             for(WeatherStation ws : o.getStationList())
             {
-                StationDAO.storeStation(new Station(ws));
+                stationDao.storeStation(new Station(ws));
             }
             response.setStatus(200);
         }
