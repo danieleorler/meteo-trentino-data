@@ -106,6 +106,7 @@ public class MeasurmentSamplerServiceTest {
         expResult.get(2).setWindDirection(0);
         expResult.get(2).setWindVelocity(0);
         List<Measurement> result = instance.getSampledMeasurementList();
+        System.out.println(result);
         assertEquals(expResult, result);
     }
     
