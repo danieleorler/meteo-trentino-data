@@ -2,3 +2,5 @@
 data.xml
 eclipse-launch-profiles
 target
+nb-configuration.xml
+nbactions.xml
