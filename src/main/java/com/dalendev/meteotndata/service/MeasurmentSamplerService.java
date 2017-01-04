@@ -31,11 +31,14 @@ import com.dalendev.meteotndata.generated.Radiation;
 import com.dalendev.meteotndata.generated.Temperature;
 import com.dalendev.meteotndata.generated.Wind;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
+import java.util.TimeZone;
 import java.util.TreeSet;
+import javax.xml.datatype.XMLGregorianCalendar;
 
 /**
  *
@@ -64,7 +67,7 @@ public class MeasurmentSamplerService
     /**
      * Merges the measurements, as read from the source XML, into a HashMap
      * where the key is a Long representing the timestamp and the value is a 
-     * Measurment object
+     * Measurement object
      * @param station the Station instance whose measurements are merged
      * @param measurementList the measurements to be merged
      */
@@ -72,7 +75,7 @@ public class MeasurmentSamplerService
     {
         for(Temperature t : measurementList.getTemperatureList().getContent())
         {
-            Long timestamp = t.getDate().toGregorianCalendar().getTimeInMillis();
+            Long timestamp = getTimeInMilliSeconds(t.getDate());
             if(timestamp > station.getLastUpdate())
             {
                 this.createMeasurementIfNotExists(station.getCode(), timestamp);
@@ -92,7 +95,7 @@ public class MeasurmentSamplerService
 
         for(Wind w : measurementList.getWindList().getContent())
         {
-            Long timestamp = w.getDate().toGregorianCalendar().getTimeInMillis();
+            Long timestamp = getTimeInMilliSeconds(w.getDate());
             if(timestamp > station.getLastUpdate())
             {
                 this.createMeasurementIfNotExists(station.getCode(), timestamp);
@@ -103,7 +106,7 @@ public class MeasurmentSamplerService
 
         for(Radiation r : measurementList.getRadiationList().getContent())
         {
-            Long timestamp = r.getDate().toGregorianCalendar().getTimeInMillis();
+            Long timestamp = getTimeInMilliSeconds(r.getDate());
             if(timestamp > station.getLastUpdate())
             {
                 this.createMeasurementIfNotExists(station.getCode(), timestamp);
@@ -156,6 +159,12 @@ public class MeasurmentSamplerService
     private float getRain(Measurement m)
     {
         return m.getRain() >= 0 ? m.getRain() : 0;
+    }
+    
+    private Long getTimeInMilliSeconds(final XMLGregorianCalendar date) {
+        GregorianCalendar gregorianCalendar = date.toGregorianCalendar();
+        gregorianCalendar.setTimeZone(TimeZone.getTimeZone("Europe/Rome"));
+        return gregorianCalendar.getTimeInMillis();
     }
     
 }
