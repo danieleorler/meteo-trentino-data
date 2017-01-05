@@ -26,6 +26,7 @@ package com.dalendev.meteotndata.api;
 import com.dalendev.meteotndata.dao.MeasurementDataStoreDao;
 import com.dalendev.meteotndata.domain.Measurement;
 import com.dalendev.meteotndata.service.MeasurementService;
+import com.dalendev.meteotndata.service.TimeService;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiClass;
 import com.google.api.server.spi.config.ApiMethod;
@@ -41,10 +42,10 @@ import java.util.List;
 @ApiClass(resource = "measurement")
 public class MeasurementApi
 {
-    private MeasurementService measurementService;
+    private final MeasurementService measurementService;
 
     public MeasurementApi() {
-        this.measurementService = new MeasurementService(new MeasurementDataStoreDao());
+        this.measurementService = new MeasurementService(new MeasurementDataStoreDao(), new TimeService());
     }
     
     @ApiMethod

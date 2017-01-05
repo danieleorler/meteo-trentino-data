@@ -23,46 +23,43 @@
  */
 package com.dalendev.meteotndata.service;
 
-import com.dalendev.meteotndata.dao.MeasurementDataStoreDao;
-import com.dalendev.meteotndata.domain.Measurement;
-import java.util.List;
-import org.junit.After;
-import org.junit.AfterClass;
+import com.dalendev.meteotndata.dao.MeasurementDaoInterface;
+import org.joda.time.LocalDate;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import org.mockito.Mock;
+import static org.mockito.Mockito.times;
+import org.mockito.junit.MockitoJUnitRunner;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 
 /**
  *
  * @author danieleorler
  */
+@RunWith(MockitoJUnitRunner.class)
 public class MeasurementServiceTest {
     
-    public MeasurementServiceTest() {
-    }
+    @Mock
+    TimeService timeService;
+    @Mock
+    MeasurementDaoInterface measurementDao;
     
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
+    private MeasurementService unitUnderTest;
     
     @Rule
     public final ExpectedException exception = ExpectedException.none();
 
+    @Before
+    public void setUp() {
+        unitUnderTest = new MeasurementService(measurementDao, timeService);
+    }
+    
     /**
      * Test of getMeasurements method, of class MeasurementService.
      * Inconsistent date range
@@ -70,10 +67,9 @@ public class MeasurementServiceTest {
     @Test
     public void testGetMeasurementsInconsistentDateRange() {
         System.out.println("getMeasurements");
-        MeasurementService instance = new MeasurementService(new MeasurementDataStoreDao());
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Date range inconsistent");
-        instance.getMeasurements("T0420", 1454781600000L, 1454778000000L);
+        unitUnderTest.getMeasurements("T0420", 1454781600000L, 1454778000000L);
     }
     
     /**
@@ -83,10 +79,9 @@ public class MeasurementServiceTest {
     @Test
     public void testGetMeasurementsDateRangeTooWide() {
         System.out.println("getMeasurements");
-        MeasurementService instance = new MeasurementService(new MeasurementDataStoreDao());
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Date range too wide (max 30 days)");
-        instance.getMeasurements("T0420", 0L, 1454778000000L);
+        unitUnderTest.getMeasurements("T0420", 0L, 1454778000000L);
     }
     
     /**
@@ -96,10 +91,9 @@ public class MeasurementServiceTest {
     @Test
     public void testGetMeasurementsStationCodeInvalid() {
         System.out.println("getMeasurements");
-        MeasurementService instance = new MeasurementService(new MeasurementDataStoreDao());
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Station code invalid");
-        instance.getMeasurements("T020", 0L, 1454778000000L);
+        unitUnderTest.getMeasurements("T020", 0L, 1454778000000L);
     }
     
     /**
@@ -109,10 +103,26 @@ public class MeasurementServiceTest {
     @Test
     public void testGetMeasurementsStationCodeInvalidNull() {
         System.out.println("getMeasurements");
-        MeasurementService instance = new MeasurementService(new MeasurementDataStoreDao());
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Station code invalid");
-        instance.getMeasurements(null, 0L, 1454778000000L);
+        unitUnderTest.getMeasurements(null, 0L, 1454778000000L);
+    }
+    
+    @Test
+    public void testGetMeasurementsDateRangeTooWideNoTo() {
+        System.out.println("getMeasurements");
+        exception.expect(IllegalArgumentException.class);
+        exception.expectMessage("Date range too wide (max 30 days)");
+        when(timeService.now()).thenReturn(LocalDate.parse("2017-01-05").toDate());
+        unitUnderTest.getMeasurements("T0420", LocalDate.parse("2016-01-05").plusDays(45).toDate().getTime(), null);
+    }
+    
+    @Test
+    public void testGetMeasurementsNoTimeInterval() {
+        System.out.println("getMeasurements");
+        when(timeService.now()).thenReturn(LocalDate.parse("2017-01-05").toDate());
+        unitUnderTest.getMeasurements("T0420", null, null);
+        verify(measurementDao, times(1)).getMeasurements(anyString(), any(Long.class), any(Long.class));
     }
     
 }

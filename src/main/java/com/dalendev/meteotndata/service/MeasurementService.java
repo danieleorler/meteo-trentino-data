@@ -24,9 +24,7 @@
 package com.dalendev.meteotndata.service;
 
 import com.dalendev.meteotndata.dao.MeasurementDaoInterface;
-import com.dalendev.meteotndata.dao.MeasurementDataStoreDao;
 import com.dalendev.meteotndata.domain.Measurement;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -39,16 +37,18 @@ public class MeasurementService
     final static long _7DAYS_IN_S = 7 * 24 * 60 * 60;
     
     private MeasurementDaoInterface measurementDao;
+    private TimeService timeService;
 
-    public MeasurementService(MeasurementDaoInterface measurementDao) {
+    public MeasurementService(MeasurementDaoInterface measurementDao, TimeService timeService) {
         this.measurementDao = measurementDao;
+        this.timeService = timeService;
     }
 
     public List<Measurement> getMeasurements(String station, Long from, Long to)
     {
         if(to == null)
         {
-            to = new Date().getTime();
+            to = timeService.now().getTime();
         }
         
         if(from == null)

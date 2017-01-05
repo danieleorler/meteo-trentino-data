@@ -24,7 +24,9 @@
 
 package com.dalendev.meteotndata.service;
 
+import java.util.Date;
 import org.joda.time.DateTimeZone;
+import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
 /**
@@ -35,6 +37,15 @@ public class TimeService {
     
     public static Long getMillis(final LocalDateTime date) {
         return date.toDateTime(DateTimeZone.forID("Europe/Rome")).getMillis();
+    }
+    
+    public static Long getMillis(final LocalDate date) {
+        return date.toDateTimeAtStartOfDay(DateTimeZone.forID("Europe/Rome")).getMillis();
+    }
+    
+    public Date now() {
+        return LocalDate.now(DateTimeZone.forID("Europe/Rome")).toDate();
+                
     }
     
 }
